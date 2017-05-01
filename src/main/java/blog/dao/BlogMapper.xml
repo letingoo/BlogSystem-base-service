@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="blog.dao.BlogMapper">
+
+
+
+    <!-- 可以更新ID -->
+    <insert id="insertBlog" parameterType="blog.entity.Blog" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO blog
+        (
+        title,
+        content,
+        userName,
+        time
+        )
+        VALUES
+        (
+        #{title},
+        #{content},
+        #{user.userName},
+        #{time}
+        )
+    </insert>
+
+
+
+    <select id="getBlogs" parameterType="java.util.Map" resultType="blog.entity.Blog">
+        SELECT *
+        FROM blog
+        WHERE 1 = 1
+        <if test="blog.userName != null" >
+            AND userName = #{blog.userName}
+        </if>
+
+        LIMIT ${pageParam.start}, ${pageParam.size}
+    </select>
+
+
+    <select id="getBlogDetail" parameterType="int" resultType="blog.entity.Blog">
+        SELECT
+        id,
+        title,
+        content,
+        userName,
+        time
+        FROM blog
+        where
+        id = ${blogId}
+    </select>
+
+
+
+
+    <update id="incLikes" parameterType="java.util.Map">
+        UPDATE
+        blog
+        SET
+        likes = likes + #{likes}
+        WHERE id = #{blogId}
+    </update>
+
+
+
+    <select id="selectBlogsTimeline" parameterType="java.util.HashMap">
+        SELECT *
+        FROM blog
+        WHERE userName IN (
+        SELECT followee FROM follow
+        WHERE follower = #{userName}
+        )
+        ORDER BY time LIMIT ${start}, ${pageSize}
+    </select>
+
+
+
+    <select id="getLikes" parameterType="int" resultType="int">
+        SELECT likes
+        FROM blog
+        WHERE id = #{blogId}
+    </select>
+
+
+
+
+    <select id="testLikeDump" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT followee
+        FROM follow
+        where follower like CONCAT('%', #{str}, '%')
+
+    </select>
+
+
+
+    <delete id="deleteBlog" parameterType="int">
+        DELETE
+        FROM
+        blog
+        WHERE id = #{blogId}
+    </delete>
+
+
+
+
+
+    <select id="getUserName" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT userName
+        FROM blog
+        WHERE id = #{blogId}
+    </select>
+
+</mapper>

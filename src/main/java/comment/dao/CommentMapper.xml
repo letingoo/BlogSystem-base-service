@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="comment.dao.CommentMapper">
+
+    <insert id="addComment">
+        INSERT INTO comment
+        (content,
+        blogId,
+        userName,
+        time
+        )
+        VALUES
+        (
+        #{content},
+        ${blogId},
+        #{userName},
+        #{time}
+        )
+    </insert>
+
+
+
+    <select id="getComments" parameterType="int" resultType="comment.entity.Comment">
+        SELECT *
+        FROM comment
+        WHERE blogId = ${blogId}
+
+    </select>
+
+</mapper>

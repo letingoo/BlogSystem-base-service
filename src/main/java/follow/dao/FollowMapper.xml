@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="follow.dao.FollowMapper">
+
+    <insert id="insertFollow" parameterType="java.util.HashMap">
+
+        INSERT INTO follow (follower, followee)
+        SELECT #{follower}, #{followee}
+        FROM DUAL
+        WHERE NOT EXISTS
+        (SELECT follower FROM follow WHERE followee = #{followee} AND follower = #{follower})
+
+
+    </insert>
+
+
+
+    <select id="getFollowee" parameterType="java.lang.String" resultType="java.lang.String">
+
+        SELECT
+        followee
+        FROM follow
+        WHERE follower = #{follower}
+
+    </select>
+
+
+
+    <select id="getFollower" parameterType="java.lang.String" resultType="java.lang.String">
+
+        SELECT
+        follower
+        FROM follow
+        WHERE followee = #{followee}
+
+    </select>
+
+
+
+    <select id="checkExist" parameterType="java.util.HashMap" resultType="int">
+        select COUNT (followee)
+        from follow
+        WHERE followee = #{followee} AND follower = #{follower}
+
+    </select>
+
+
+</mapper>
