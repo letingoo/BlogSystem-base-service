@@ -203,7 +203,6 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
-
     </dependencies>
 
 
@@ -220,6 +219,7 @@
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
+                    <skip>true</skip>
                 </configuration>
             </plugin>
 

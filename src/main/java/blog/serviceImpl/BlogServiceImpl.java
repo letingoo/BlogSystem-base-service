@@ -8,7 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundZSetOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+
+import timeline.serviceImpl.TimelineService;
 import util.PageParam;
+
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,9 +32,9 @@ public class BlogServiceImpl implements BlogService {
     private RedisTemplate<String, Integer> redisTemplate;
 
 
-//    @Autowired
-//    private AmqpTemplate amqpTemplate;
 
+    @Autowired
+    private TimelineService timelineService;
 
 
     @Override
@@ -42,7 +45,8 @@ public class BlogServiceImpl implements BlogService {
         // 把blog推送到关注者的timeline的Redis缓存上。使用消息队列
         //amqpTemplate.convertAndSend("pushTimelineQueueKey", blog);
 
-        System.out.println("add Blog done");
+        // 把blog推送到timeline系统上
+        timelineService.addTimeline(blog);
     }
 
 
@@ -138,4 +142,6 @@ public class BlogServiceImpl implements BlogService {
 
         return "success";
     }
+
+
 }

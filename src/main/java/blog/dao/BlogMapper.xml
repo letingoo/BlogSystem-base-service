@@ -18,7 +18,7 @@
         (
         #{title},
         #{content},
-        #{user.userName},
+        #{userName},
         #{time}
         )
     </insert>

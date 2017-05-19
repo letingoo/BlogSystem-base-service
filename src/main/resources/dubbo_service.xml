@@ -34,6 +34,7 @@
     <dubbo:service interface="comment.service.CommentService" ref="commentService" />
     <dubbo:service interface="follow.service.FollowService" ref="followService" />
     <dubbo:service interface="user.service.UserService" ref="userService" />
+    <dubbo:service interface="timeline.service.TimelineViewService" ref="timelineViewService" />
 
     
     <bean id="blogService" class="blog.serviceImpl.BlogServiceImpl" />
@@ -43,5 +44,8 @@
     <bean id="followService" class="follow.serviceImpl.FollowServiceImpl" />
     
     <bean id="userService" class="user.serviceImpl.UserServiceImpl" />
+
+    <bean id="timelineViewService" class="timeline.serviceImpl.TimelineService" />
+
     
 </beans>

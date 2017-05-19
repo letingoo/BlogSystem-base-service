@@ -44,4 +44,9 @@ public class FollowServiceImpl implements FollowService{
     public List<String> getFollowee(String follower) {
         return followMapper.getFollowee(follower);
     }
+
+    @Override
+    public List<String> getFollower(String leader) {
+        return followMapper.getFollower(leader);
+    }
 }
