@@ -19,7 +19,7 @@ import java.util.Set;
 @Service
 public class TimelineService implements TimelineViewService{
 
-    @Autowired
+    //@Autowired
     private AmqpTemplate amqpTemplate;
 
 

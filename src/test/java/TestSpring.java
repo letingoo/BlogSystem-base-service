@@ -18,16 +18,19 @@ import javax.annotation.Resource;
 public class TestSpring {
 
 
-    @Resource(name = "userService")
-    private UserService userService;
+    @Resource(name = "blogService")
+    private BlogService blogService;
 
     @Test
     public void testSpring() {
 
-        String name = "test";
-        String pass = "123";
+        Blog blog = new Blog();
 
-        userService.doLogin(name, pass);
+        blog.setUserName("letingoo");
+        blog.setContent("哈哈http://www.baidu.com MMM");
+
+        blogService.addBlog(blog);
+
     }
 
 }

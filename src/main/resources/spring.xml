@@ -20,7 +20,7 @@
 
     <import resource="mybatis.xml" />
     <import resource="spring-redis.xml" />
-    <import resource="spring-rabbitMQ.xml" />
+    <!--<import resource="spring-rabbitMQ.xml" />-->
 
 
     <!-- dubbo -->

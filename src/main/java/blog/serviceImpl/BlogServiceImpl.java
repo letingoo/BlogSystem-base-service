@@ -9,13 +9,17 @@ import org.springframework.data.redis.core.BoundZSetOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import redis.clients.jedis.Jedis;
 import timeline.serviceImpl.TimelineService;
 import util.PageParam;
+import util.UrlUtil;
 
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by BASA on 2017/4/30.
@@ -25,28 +29,32 @@ public class BlogServiceImpl implements BlogService {
 
 
 
+
     @Autowired
     private BlogMapper blogMapper;
 
     @Autowired
     private RedisTemplate<String, Integer> redisTemplate;
 
-
-
     @Autowired
     private TimelineService timelineService;
+
+    @Autowired
+    private Jedis jedis;
+
 
 
     @Override
     public void addBlog(Blog blog) {
 
+        // 将blog内容中的url转换成short url
+        longUrlToShortUrl(blog);
+
         blogMapper.insertBlog(blog);
 
-        // 把blog推送到关注者的timeline的Redis缓存上。使用消息队列
-        //amqpTemplate.convertAndSend("pushTimelineQueueKey", blog);
 
         // 把blog推送到timeline系统上
-        timelineService.addTimeline(blog);
+        //timelineService.addTimeline(blog);
     }
 
 
@@ -142,6 +150,44 @@ public class BlogServiceImpl implements BlogService {
 
         return "success";
     }
+
+
+    private void longUrlToShortUrl(Blog blog) {
+
+        String content = blog.getContent();
+
+        String regex = "(http:|https:)//[^[A-Za-z0-9\\._\\?%&+\\-=/#]]*";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(content);
+        StringBuffer result = new StringBuffer();
+        while (matcher.find()) {
+            String url = matcher.group();
+            String shortUrl = realLongUrlToShortUrl(url);
+            matcher.appendReplacement(result, shortUrl);
+        }
+        matcher.appendTail(result);
+        blog.setContent(result.toString());
+    }
+
+
+    private static final String URL_INDEX = "url_index";
+    private static final String URL_SET = "url_set";
+    private static final String TRANSFER_PREFIX = "http://114.215.159.226:18080/shortUrl/";
+
+
+    private String realLongUrlToShortUrl(String url) {
+
+        jedis.auth("letingoo");
+
+        long url_id = jedis.incr(URL_INDEX);
+        String transUrl = UrlUtil.toShortUrl(url_id);
+
+        jedis.hset(URL_SET, transUrl, url);
+
+        return TRANSFER_PREFIX + transUrl;
+
+    }
+
 
 
 }
