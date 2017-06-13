@@ -44,9 +44,19 @@
 
 
 
+    <bean id="dataSourceAspect" class="db.DataSourceAspect"/>
+
+    <aop:config>
+        <aop:aspect id="ascpect" ref="dataSourceAspect">
+            <aop:pointcut id="sqlExeution" expression="execution(* *.dao..*.*(..))" />
+            <aop:before method="before" pointcut-ref="sqlExeution" />
+        </aop:aspect>
+    </aop:config>
 
 
-    <!--配置Jedis,这个是正常的-->
+
+
+    <!--配置Jedis,也不知这样对不对-->
     <bean id="jedis" class="redis.clients.jedis.Jedis">
         <constructor-arg name="host" value="114.215.159.226" />
         <constructor-arg name="port" value="6379" />

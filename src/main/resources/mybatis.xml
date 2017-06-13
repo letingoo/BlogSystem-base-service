@@ -6,6 +6,36 @@
        http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 
+
+
+    <bean id="masterDataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="url" value="jdbc:mysql://114.215.159.226:3306/blogSystem"/>
+        <property name="username" value="letingoo" />
+        <property name="password" value="931011" />
+    </bean>
+
+
+    <bean id="slaveDataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="url" value="jdbc:mysql://localhost:3306/blogSystem" />
+        <property name="username" value="root" />
+        <property name="password" value="931011" />
+    </bean>
+
+
+
+    <bean id="dynamicDataSource" class="db.RouteDataSource">
+        <property name="targetDataSources">
+            <map>
+                <entry key="write" value-ref="masterDataSource"/>
+                <entry key="read" value-ref="slaveDataSource"/>
+            </map>
+        </property>
+
+        <property name="defaultTargetDataSource" ref="masterDataSource"/>
+    </bean>
+
+
+
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
         <property name="url" value="jdbc:mysql://114.215.159.226:3306/blogSystem"/>
         <property name="username" value="letingoo" />
@@ -15,7 +45,7 @@
 
 
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dynamicDataSource" />
         <property name="mapperLocations" value="classpath:*/dao/*.xml" />
     </bean>
 
