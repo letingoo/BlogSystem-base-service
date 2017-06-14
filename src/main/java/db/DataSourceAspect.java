@@ -5,6 +5,7 @@ import org.springframework.asm.Handle;
 
 /**
  * Created by zmc on 2017/6/9.
+ * 根据DAO内的方法名进行读写分离
  */
 public class DataSourceAspect {
 
